@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import datetime
 import json
 import re
+from http.server import BaseHTTPRequestHandler
 
 load_dotenv()
 API_KEY = os.getenv('TAVILY_API_KEY')
@@ -124,38 +125,28 @@ Web search results:
     print(f"OpenAI response: {answer}")
     return answer
 
-def handler(event, context):
-    # Set CORS headers
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-    }
+class Handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
-    method = event.get('method', 'GET')
-
-    if method == 'OPTIONS':
-        return {
-            'statusCode': 200,
-            'headers': headers,
-            'body': ''
-        }
-
-    if method == 'POST':
+    def do_POST(self):
         try:
-            body = event.get('body', '{}')
-            if isinstance(body, str):
-                data = json.loads(body)
-            else:
-                data = body
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            data = json.loads(post_data.decode('utf-8'))
             query = data.get('message')
             language = data.get('language', 'en')
             if not query:
-                return {
-                    'statusCode': 400,
-                    'headers': headers,
-                    'body': json.dumps({'error': 'No message provided'})
-                }
+                self.send_response(400)
+                self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'No message provided'}).encode('utf-8'))
+                return
             
             tavily_response = search_tavily(query, language)
             results = []
@@ -168,31 +159,26 @@ def handler(event, context):
                 })
             detailed_answer = generate_detailed_answer(query, results, language)
             dates = [r.get('date', '') for r in results]
-            return {
-                'statusCode': 200,
-                'headers': headers,
-                'body': json.dumps({
-                    'detailed_answer': detailed_answer,
-                    'results': results,
-                    'dates': dates
-                })
-            }
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                'detailed_answer': detailed_answer,
+                'results': results,
+                'dates': dates
+            }).encode('utf-8'))
         except Exception as e:
             print(f"Error: {e}")
-            return {
-                'statusCode': 500,
-                'headers': headers,
-                'body': json.dumps({'error': 'Internal server error'})
-            }
-    else:
-        return {
-            'statusCode': 405,
-            'headers': headers,
-            'body': json.dumps({'error': 'Method not allowed'})
-        }
+            self.send_response(500)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({'error': 'Internal server error'}).encode('utf-8'))
 
-class Handler:
-    def __call__(self, event, context):
-        return handler(event, context)
-
-handler = Handler
+    def do_GET(self):
+        self.send_response(405)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps({'error': 'Method not allowed'}).encode('utf-8'))
