@@ -124,7 +124,7 @@ Web search results:
     print(f"OpenAI response: {answer}")
     return answer
 
-def handler(request):
+def handler(event, context):
     # Set CORS headers
     headers = {
         'Access-Control-Allow-Origin': '*',
@@ -132,16 +132,22 @@ def handler(request):
         'Access-Control-Allow-Headers': 'Content-Type',
     }
 
-    if request.method == 'OPTIONS':
+    method = event.get('method', 'GET')
+
+    if method == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': headers,
             'body': ''
         }
 
-    if request.method == 'POST':
+    if method == 'POST':
         try:
-            data = json.loads(request.body)
+            body = event.get('body', '{}')
+            if isinstance(body, str):
+                data = json.loads(body)
+            else:
+                data = body
             query = data.get('message')
             language = data.get('language', 'en')
             if not query:
