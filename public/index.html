@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="modern-theme">
+    <div class="container glass-morphism">
+        <!-- Header Section -->
+        <header class="floating-header">
+            <div class="logo animated">
+                <img src="teal-logo.jpeg" alt="Logo" class="logo-image">
+            </div>
+            <div class="language-selector modern-select">
+                <button id="language-btn" class="gradient-btn">English <i class="fas fa-chevron-down"></i></button>
+                <div class="language-dropdown glass-effect" id="language-dropdown">
+                    <div class="language-option hover-effect" data-lang="en">English</div>
+                    <div class="language-option hover-effect" data-lang="ar">العربية</div>
+                    <div class="language-option hover-effect" data-lang="fr">Français</div>
+                    <div class="language-option hover-effect" data-lang="es">Español</div>
+                </div>
+            </div>
+
+        </header>
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Welcome Message -->
+            <div class="welcome-message fade-in" style="margin-bottom: 75px;">
+                <h1 class="gradient-text" data-lang="welcome">Teal AI-powered chatbot to help with your questions</h1>
+                <p class="subtitle" data-lang="ask">Ask me anything about ANYTHING and I'll try to assist you!</p>
+            </div>
+
+            <!-- Chat Messages Container -->
+            <div class="chat-container smooth-scroll" id="chat-container">
+                <!-- Messages will be added here dynamically -->
+                 <div class="message-wrapper bot wrapper" style="margin: 10px 0; display: flex; justify-content: flex-start;">
+                    <div class="message-bubble bot message" style="max-width: 70%; padding: 23px 31px; border-radius: 20px; background-color: #f0f0f0; color: black; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <div class="message-text" style="word-break: break-word; line-height: 1.4;" data-lang="msg">Hello, I'm your Tavily Web Research Chatbot. Ask me anything and I'll find the latest information for you!</div>
+                    </div>
+                </div>  
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator modern-dots" id="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </main>
+
+        <!-- Chat Input Area -->
+        <footer class="floating-footer" style="position: sticky; bottom: 0; background-color: white; z-index: 1000;">
+            <div class="chat-input-container glass-input">
+                <textarea id="chat-input" class="modern-input" placeholder="Please ask me a question"
+                    rows="1"></textarea>
+                <div class="chat-buttons" id="chat-buttons">
+                    <button id="mic-btn" class="icon-btn pulse-effect" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="send-btn" class="icon-btn gradient-effect" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="recording-indicator modern-recording" id="recording-indicator">
+                <div class="recording-pulse"></div>
+                <span class="status-text" data-lang="listening">Listening...</span>
+                <button id="stop-recording-btn" class="icon-btn danger-effect">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/openai@4.0.0/dist/openai.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+        <script src="script.js"></script>
+
+
+        
+    </div>
+</body>
+
+</html>
