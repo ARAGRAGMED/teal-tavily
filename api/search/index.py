@@ -195,4 +195,4 @@ class Handler:
     def __call__(self, event, context):
         return handler(event, context)
 
-handler = Handler()
+handler = Handler
