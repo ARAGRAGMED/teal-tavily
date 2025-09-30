@@ -56,16 +56,39 @@ A sophisticated web-based chatbot that leverages Tavily's search API and OpenAI'
 
 1. **Start the backend server**
    ```bash
-   python3 -m uvicorn main:app --reload --port 8001
+   python3 -m uvicorn main:app --reload --port 5001
    ```
 
 2. **Open the frontend**
-   Open `public/index.html` in your web browser, or serve it with a local server:
+   Visit `http://localhost:5001` in your web browser. The FastAPI server now serves both the API and the static frontend files.
+
+## 🌐 Deployment
+
+The application is deployed on Vercel for live access.
+
+### Live Demo
+Visit the live chatbot at: [https://teal-tavily.vercel.app](https://teal-tavily.vercel.app)
+
+### Deploying to Vercel
+
+1. **Install Vercel CLI**
    ```bash
-   cd public
-   python3 -m http.server 5001
+   npm install -g vercel
    ```
-   Then visit `http://localhost:5001`
+
+2. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+3. **Set Environment Variables**
+   In your Vercel dashboard, add the following environment variables:
+   - `TAVILY_API_KEY`
+   - `OPENAI_API_KEY`
+   - `TAVILY_RESULT_LIMIT` (default: 8)
+   - `TAVILY_DAYS_BACK` (default: 7)
+
+The deployment uses a hybrid setup: static frontend served by Vercel, and Python serverless functions for the API.
 
 ## 📖 Usage
 

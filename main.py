@@ -4,6 +4,7 @@ import openai
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List
 from starlette.responses import JSONResponse
@@ -28,6 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files from public directory
+app.mount("/", StaticFiles(directory="public", html=True), name="static")
 
 class SearchRequest(BaseModel):
     message: str
