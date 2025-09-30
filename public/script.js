@@ -299,7 +299,7 @@
                 scrollChatToBottom();
                 try {
                     console.log('Sending POST request to API');
-                    const response = await fetch('http://127.0.0.1:8001/api/search', {
+                    const response = await fetch('/api/search', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
