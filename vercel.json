@@ -1,13 +1,22 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "public"
+      }
+    },
+    {
+      "src": "api/search.py",
+      "use": "@vercel/python"
+    }
+  ],
   "routes": [
     {
       "src": "/api/search",
-      "dest": "/api/search.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "api/search.py"
     }
   ]
 }
