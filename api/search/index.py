@@ -190,3 +190,9 @@ def handler(event, context):
             'headers': headers,
             'body': json.dumps({'error': 'Method not allowed'})
         }
+
+class Handler:
+    def __call__(self, event, context):
+        return handler(event, context)
+
+handler = Handler()
