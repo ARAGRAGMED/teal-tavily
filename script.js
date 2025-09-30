@@ -299,7 +299,10 @@
                 scrollChatToBottom();
                 try {
                     console.log('Sending POST request to API');
-                    const response = await fetch('/api/search', {
+                    // Determine API URL based on environment
+                    const isVercel = window.location.hostname.includes('vercel.app');
+                    const apiUrl = isVercel ? '/api/search' : 'http://127.0.0.1:8001/api/search';
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
